@@ -10,7 +10,7 @@
 
 	<name>Maven ClassFileTransformer Plugin</name>
 
-	<description>Transform ByteCode with ClassFileTransformer at compile time</description>
+	<description>Transform ByteCode with ClassFileTransformer</description>
 
 	<url>https://github.com/marcosemiao/maven-classfiletransformer-plugin</url>
 
