@@ -1,18 +1,15 @@
 /*
- * Copyright 2015 Marco Simport java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-or implied.
+ * Copyright 2015 Marco Semiao
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -45,11 +42,18 @@ public class JarTransformer {
 
     private final static String CLASS_EXTENSION = ".class";
 
+    private final Logger logger;
+
     private final ClassLoader loader;
     private final List<File> sources;
     private final List<ClassFileTransformer> classFileTransformers;
 
     public JarTransformer(final ClassLoader loader, final List<File> sources, final List<ClassFileTransformer> classFileTransformers) {
+	this(new DefaultLogger(), loader, sources, classFileTransformers);
+    }
+
+    public JarTransformer(final Logger logger, final ClassLoader loader, final List<File> sources, final List<ClassFileTransformer> classFileTransformers) {
+	this.logger = logger;
 	this.loader = loader;
 	this.sources = sources;
 	this.classFileTransformers = classFileTransformers;
@@ -127,7 +131,7 @@ public class JarTransformer {
 	    }
 
 	    if (byteCode != byteCodeModified) {
-		System.out.println("Transform : " + className);
+		logger.info("Transform : " + className);
 	    }
 	}
 	return byteCodeModified;
@@ -148,5 +152,13 @@ public class JarTransformer {
 	final byte[] bytecode = buffer.toByteArray();
 
 	return bytecode;
+    }
+
+    private final static class DefaultLogger implements Logger {
+
+	public void info(final String message) {
+	    System.out.println(message);
+	}
+
     }
 }

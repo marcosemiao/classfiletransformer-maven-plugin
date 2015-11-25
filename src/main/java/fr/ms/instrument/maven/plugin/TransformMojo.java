@@ -35,6 +35,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import fr.ms.instrument.JarTransformer;
+import fr.ms.instrument.Logger;
 
 /**
  *
@@ -66,7 +67,8 @@ public class TransformMojo extends AbstractMojo {
 		final File source = artifact.getFile();
 		final File destination = new File(source.getParent(), "instrument.jar");
 
-		final JarTransformer transform = new JarTransformer(cl, Arrays.asList(source), transformers);
+		final Logger log = new MavenLogger(getLog());
+		final JarTransformer transform = new JarTransformer(log, cl, Arrays.asList(source), transformers);
 		transform.transform(destination);
 
 		final File sourceRename = new File(source.getParent(), "notransform-" + source.getName());

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.marcosemiao.maven.plugins</groupId>
-	<artifactId>maven-classfiletransformer-plugin</artifactId>
+	<artifactId>classfiletransformer-maven-plugin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>maven-plugin</packaging>
@@ -12,7 +12,7 @@
 
 	<description>Transform ByteCode with ClassFileTransformer</description>
 
-	<url>https://github.com/marcosemiao/maven-classfiletransformer-plugin</url>
+	<url>https://github.com/marcosemiao/classfiletransformer-maven-plugin</url>
 
 	<licenses>
 		<license>
@@ -25,14 +25,14 @@
 		<developer>
 			<name>Marco Semiao</name>
 			<url>https://marcosemiao4j.wordpress.com</url>
-			<organizationUrl>https://github.com/marcosemiao/maven-classfiletransformer-plugin</organizationUrl>
+			<organizationUrl>https://github.com/marcosemiao/classfiletransformer-maven-plugin</organizationUrl>
 		</developer>
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:marcosemiao/maven-classfiletransformer-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com:marcosemiao/maven-classfiletransformer-plugin.git</developerConnection>
-		<url>git@github.com:marcosemiao/maven-classfiletransformer-plugin.git</url>
+		<connection>scm:git:git@github.com:marcosemiao/classfiletransformer-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:marcosemiao/classfiletransformer-maven-plugin.git</developerConnection>
+		<url>git@github.com:marcosemiao/classfiletransformer-maven-plugin.git</url>
 		<tag>HEAD</tag>
 	</scm>
 
