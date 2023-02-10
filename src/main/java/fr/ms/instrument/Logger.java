@@ -26,6 +26,6 @@ package fr.ms.instrument;
  */
 public interface Logger {
 
-    void info(String message);
+	void info(String message);
 
 }

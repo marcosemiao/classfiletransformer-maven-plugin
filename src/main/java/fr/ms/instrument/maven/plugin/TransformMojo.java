@@ -48,76 +48,79 @@ import fr.ms.instrument.Logger;
 @Mojo(name = "transform", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public class TransformMojo extends AbstractMojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    private MavenProject project;
+	@Parameter(defaultValue = "${project}", readonly = true, required = true)
+	private MavenProject project;
 
-    @Parameter
-    private String[] classFileTransformers;
+	@Parameter
+	private String[] classFileTransformers;
 
-    public void execute() throws MojoExecutionException, MojoFailureException {
-	final String packaging = project.getPackaging();
-	final Artifact artifact = project.getArtifact();
+	@Override
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		final String packaging = project.getPackaging();
+		final Artifact artifact = project.getArtifact();
 
-	try {
+		try {
 
-	    if ("jar".equals(packaging) && artifact != null && classFileTransformers != null && classFileTransformers.length > 0) {
-		final ClassLoader cl = getClassloader();
-		final List<ClassFileTransformer> transformers = getClassFileTransformers(cl);
+			if ("jar".equals(packaging) && (artifact != null) && (classFileTransformers != null)
+					&& (classFileTransformers.length > 0)) {
+				final ClassLoader cl = getClassloader();
+				final List<ClassFileTransformer> transformers = getClassFileTransformers(cl);
 
-		final File source = artifact.getFile();
-		final File destination = new File(source.getParent(), "instrument.jar");
+				final File source = artifact.getFile();
+				final File destination = new File(source.getParent(), "instrument.jar");
 
-		final Logger log = new MavenLogger(getLog());
-		final JarTransformer transform = new JarTransformer(log, cl, Arrays.asList(source), transformers);
-		transform.transform(destination);
+				final Logger log = new MavenLogger(getLog());
+				final JarTransformer transform = new JarTransformer(log, cl, Arrays.asList(source), transformers);
+				transform.transform(destination);
 
-		final File sourceRename = new File(source.getParent(), "notransform-" + source.getName());
+				final File sourceRename = new File(source.getParent(), "notransform-" + source.getName());
 
-		source.renameTo(sourceRename);
-		destination.renameTo(source);
-	    }
-	} catch (final Exception e) {
-	    throw new MojoExecutionException(e.getMessage(), e);
+				source.renameTo(sourceRename);
+				destination.renameTo(source);
+			}
+		} catch (final Exception e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		}
 	}
-    }
 
-    private ClassLoader getClassloader() throws MojoExecutionException {
-	try {
-	    final List<String> compileClasspathElements = project.getCompileClasspathElements();
-	    final List<URL> classPathUrls = new ArrayList<URL>();
+	private ClassLoader getClassloader() throws MojoExecutionException {
+		try {
+			final List<String> compileClasspathElements = project.getCompileClasspathElements();
+			final List<URL> classPathUrls = new ArrayList<URL>();
 
-	    for (final String path : compileClasspathElements) {
-		classPathUrls.add(new File(path).toURI().toURL());
-	    }
+			for (final String path : compileClasspathElements) {
+				classPathUrls.add(new File(path).toURI().toURL());
+			}
 
-	    final URLClassLoader urlClassLoader = URLClassLoader.newInstance(classPathUrls.toArray(new URL[classPathUrls.size()]), Thread.currentThread()
-		    .getContextClassLoader());
+			final URLClassLoader urlClassLoader = URLClassLoader.newInstance(
+					classPathUrls.toArray(new URL[classPathUrls.size()]),
+					Thread.currentThread().getContextClassLoader());
 
-	    return urlClassLoader;
-	} catch (final Exception e) {
-	    throw new MojoExecutionException(e.getMessage(), e);
+			return urlClassLoader;
+		} catch (final Exception e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		}
 	}
-    }
 
-    private List<ClassFileTransformer> getClassFileTransformers(final ClassLoader cl) throws MojoExecutionException {
-	try {
-	    final List<String> compileClasspathElements = project.getCompileClasspathElements();
-	    final List<URL> classPathUrls = new ArrayList<URL>();
+	private List<ClassFileTransformer> getClassFileTransformers(final ClassLoader cl) throws MojoExecutionException {
+		try {
+			final List<String> compileClasspathElements = project.getCompileClasspathElements();
+			final List<URL> classPathUrls = new ArrayList<URL>();
 
-	    for (final String path : compileClasspathElements) {
-		classPathUrls.add(new File(path).toURI().toURL());
-	    }
+			for (final String path : compileClasspathElements) {
+				classPathUrls.add(new File(path).toURI().toURL());
+			}
 
-	    final List<ClassFileTransformer> liste = new ArrayList<ClassFileTransformer>(classFileTransformers.length);
-	    for (final String classFileTransformer : classFileTransformers) {
-		final Class<?> clazz = cl.loadClass(classFileTransformer);
-		final ClassFileTransformer element = (ClassFileTransformer) clazz.newInstance();
-		liste.add(element);
-	    }
+			final List<ClassFileTransformer> liste = new ArrayList<ClassFileTransformer>(classFileTransformers.length);
+			for (final String classFileTransformer : classFileTransformers) {
+				final Class<?> clazz = cl.loadClass(classFileTransformer);
+				final ClassFileTransformer element = (ClassFileTransformer) clazz.newInstance();
+				liste.add(element);
+			}
 
-	    return liste;
-	} catch (final Exception e) {
-	    throw new MojoExecutionException(e.getMessage(), e);
+			return liste;
+		} catch (final Exception e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		}
 	}
-    }
 }

@@ -30,13 +30,14 @@ import fr.ms.instrument.Logger;
  */
 public class MavenLogger implements Logger {
 
-    private final Log log;
+	private final Log log;
 
-    public MavenLogger(final Log log) {
-	this.log = log;
-    }
+	public MavenLogger(final Log log) {
+		this.log = log;
+	}
 
-    public void info(final String message) {
-	log.info(message);
-    }
+	@Override
+	public void info(final String message) {
+		log.info(message);
+	}
 }
